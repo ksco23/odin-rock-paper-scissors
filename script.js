@@ -2,10 +2,21 @@ const log = console.log;
 
 //VARIABLE: humanScore init to 0
 //VARIABLE: computerScore init to 0
+let humanScore = 0;
+let computerScore = 0;
 
+//log(getComputerChoice());
 
 //FUNCTION: getComputerChoice
     //Randomly return 'rock', 'paper,' or scissors'
+function getComputerChoice(){
+    const choices = {
+        0: 'rock',
+        1: 'paper',
+        2: 'scissors'
+    };
+    return choices[Math.floor(Math.random() * 3)];
+}
 
 
 //FUNCTION: getHumanChoice
