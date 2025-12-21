@@ -6,6 +6,7 @@ let humanScore = 0;
 let computerScore = 0;
 
 //log(getComputerChoice());
+log(getHumanChoice());
 
 //FUNCTION: getComputerChoice
     //Randomly return 'rock', 'paper,' or scissors'
@@ -21,6 +22,9 @@ function getComputerChoice(){
 
 //FUNCTION: getHumanChoice
     //Prompt the user for input, 'rock', 'paper,' or scissors'
+function getHumanChoice(){
+    return prompt('Input either rock, paper, or scissors');
+}
 
 
 //FUNCTION: playRound accepts 2 params, humanChoice and computerChoice
