@@ -3,9 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Rock, Paper, Scissors</title>
+
+    <style>
+        table{
+            border-collapse: collapse;
+        }
+        th,
+        td{
+            border: 1px solid black;
+            text-align: center;
+            padding: 2px 5px;
+        }
+    </style>
 </head>
 <body>
+
+    <div id="userSelection">
+        <button>Rock</button>
+        <button>Paper</button>
+        <button>Scissors</button>
+    </div>
+
+    <div id="resultsContainer">
+        <p id="roundResult"></p>
+        <table>
+            <tr>
+                <th>You</th>
+                <th>Computer</th>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>0</td>
+            </tr>
+        </table>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

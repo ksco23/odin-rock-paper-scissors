@@ -1,65 +1,35 @@
 playGame();
 
-//FUNCTION: playGame
-    //Once playRound is working, move its declaration here, as well as the 2 global score variables
-    //Play 5 rounds
-    //Declare a winner at the end
 function playGame(){
     let humanScore = 0;
     let computerScore = 0;
 
-    const totalRounds = 5;
-    let currentRound = 0;
+    const humanSelectBtnContainer = document.querySelector('#userSelection');
 
-    while(currentRound < totalRounds){
-        currentRound++;
-        console.log(`Round: ${currentRound}`);
+    humanSelectBtnContainer.addEventListener('click', humanSelectClickEvt);
 
-        const humanSelection = getHumanChoice();
-        const computerSelection = getComputerChoice();
-
-        playRound(humanSelection, computerSelection);
-
-        console.log(`Score: Computer - ${computerScore}, You - ${humanScore}`);
+    function humanSelectClickEvt(e){
+        if(e.target.tagName === 'BUTTON'){
+            playRound(e.target.textContent, getComputerChoice());
+        }
     }
-
-    if(computerScore > humanScore){
-        console.log(`You lose! The computer's score was ${computerScore}, your score was ${humanScore}.`);
-    }
-    else if(computerScore < humanScore){
-        console.log(`You win! Your score was ${humanScore}, the computer's score was ${computerScore}.`);
-    }
-    else{
-        console.log(`It was a draw. Your score was ${humanScore}, the computer's score was ${computerScore}.`);
-    }
-
-
-
-
-    //FUNCTION: playRound accepts 2 params, humanChoice and computerChoice
-    //Convert humanChoice to lowercase
-    //Compare humanChoice and computerChoice to determine the round winner (Rock beats scissors, scissors beat paper, and paper beats rock)
-    //Log a string declaring the winner ('You lose! Paper beats Rock)
-    //Increment humanScore or computerScore based on the round winner
 
     function playRound(humanChoice, computerChoice){
         const humanChoiceLowercase = humanChoice.toLowerCase();
-
-        console.log(`Computer: ${computerChoice}\nYou: ${humanChoice}`);
 
         switch(computerChoice){
             case 'rock':
                 if(humanChoiceLowercase === 'scissors'){
                     //Computer wins
                     computerWins(computerChoice, humanChoice);
+
                 }
                 else if(humanChoiceLowercase === 'paper'){
                     //Human wins
                     humanWins(computerChoice, humanChoice);
                 }
                 else{
-                    //Draw
-                    console.log('It was a draw.');
+                    tie(computerChoice, humanChoice);
                 }
                 break;
             
@@ -73,7 +43,7 @@ function playGame(){
                     humanWins(computerChoice, humanChoice);
                 }
                 else{
-                    console.log('It was a draw.');
+                    tie(computerChoice, humanChoice);
                 }
                 break;
 
@@ -87,17 +57,15 @@ function playGame(){
                     humanWins(computerChoice, humanChoice);
                 }
                 else{
-                    console.log('It was a draw.');
+                    tie(computerChoice, humanChoice);
                 }
                 break;
 
             default:
-                console.log('Something went wrong. Computer choice wasn\'t valid!');
+                console.error('Something went wrong. Computer choice wasn\'t valid!');
         }
     }
 
-    //FUNCTION: getComputerChoice
-    //Randomly return 'rock', 'paper,' or scissors'
     function getComputerChoice(){
         const choices = {
             0: 'rock',
@@ -107,20 +75,65 @@ function playGame(){
         return choices[Math.floor(Math.random() * 3)];
     }
 
-
-    //FUNCTION: getHumanChoice
-        //Prompt the user for input, 'rock', 'paper,' or scissors'
-    function getHumanChoice(){
-        return prompt('Input either rock, paper, or scissors');
-    }
-
     function computerWins(computerChoice, humanChoice){
         computerScore += 1;
-        console.log(`You lose! ${capFirstLetter(computerChoice)} beats ${capFirstLetter(humanChoice)}.`);
+        printRoundResult(computerChoice, humanChoice, true);
+        printScore();
+        if(computerScore >= 5){
+            gameOver(true);
+        }
     }
     function humanWins(computerChoice, humanChoice){
         humanScore += 1;
-        console.log(`You win! ${capFirstLetter(humanChoice)} beats ${capFirstLetter(computerChoice)}.`);
+        printRoundResult(computerChoice, humanChoice, false);
+        printScore();
+        if(humanScore >= 5){
+            gameOver(false);
+        }
+    }
+    function tie(computerChoice, humanChoice){
+        printRoundResult(computerChoice, humanChoice)
+        printScore();
+    }
+
+    function printScore(){
+        const resultsTable = document.querySelector('#resultsContainer').querySelector('table');
+        const tr = document.createElement('tr');
+        const humanTd = document.createElement('td');
+        const computerTd = document.createElement('td');
+
+        humanTd.textContent = humanScore;
+        computerTd.textContent = computerScore;
+
+        tr.appendChild(humanTd);
+        tr.appendChild(computerTd);
+        resultsTable.appendChild(tr);
+    }
+
+    function printRoundResult(computerChoice, humanChoice, computerWon){
+        let resultsString = 'It was a tie.';
+
+        if(typeof computerWon !== 'undefined'){
+            const winner = computerWon ? 'The computer' : 'You';
+            const winningChoice = computerWon ? computerChoice : humanChoice;
+            const losingChoice = computerWon ? humanChoice : computerChoice;
+
+            resultsString = `${winner} won that round! ${capFirstLetter(winningChoice)} beats ${capFirstLetter(losingChoice)}.`;
+        }
+
+        const resultP = document.querySelector('#roundResult');
+        resultP.textContent = resultsString;
+    }
+
+    function gameOver(computerWon){
+        const resultContainer = document.querySelector('#resultsContainer');
+        const gameOverP = document.createElement('p');
+        const resultsString = computerWon ? 'GAME OVER! Sorry, the computer won.' : 'GAME OVER! YOU WON!'
+
+        gameOverP.textContent = resultsString;
+        resultContainer.appendChild(gameOverP);
+
+        humanSelectBtnContainer.removeEventListener('click', humanSelectClickEvt);
     }
 
     //Make the first letter of a string capitalized
